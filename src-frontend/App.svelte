@@ -1,21 +1,19 @@
-<script>
+<script lang="ts">
  import * as backend from "./turbocharger_generated";
  import CodeMirror from "./CodeMirror.svelte";
 
  (async () => {
-  let person = Object.assign(new backend.Person(), { name: "Bob" });
+  let note = Object.assign(new backend.Note(), { text: "Bob" });
 
-  // let person2 = new backend.Person({ name: "bob" });
-
-  let rowid = await backend.insert_person(person);
+  let rowid = await backend.insert_note(note);
   console.log("Inserted rowid ", rowid);
  })();
 </script>
 
 Hello!<br />
 
-{#await backend.get_person(1n) then person}
- Name: {person.name}
+{#await backend.get_note(1n) then note}
+ Name: {note.text}
 {:catch error}
  Error: {error}
 {/await}

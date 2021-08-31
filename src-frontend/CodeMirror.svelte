@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
  import { onMount, createEventDispatcher } from "svelte";
  import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup";
  import { oneDark } from "@codemirror/theme-one-dark";
@@ -8,7 +8,7 @@
  export let doc;
 
  let node;
- let view;
+ let view: EditorView;
 
  onMount(async () => {
   view = new EditorView({
