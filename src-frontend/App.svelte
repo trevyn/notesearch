@@ -1,5 +1,6 @@
 <script>
  import * as backend from "./turbocharger_generated";
+ import CodeMirror from "./CodeMirror.svelte";
 
  (async () => {
   let person = Object.assign(new backend.Person(), { name: "Bob" });
@@ -18,3 +19,9 @@ Hello!<br />
 {:catch error}
  Error: {error}
 {/await}
+
+<div class="bg-black text-gray-500 flex w-screen min-h-screen max-h-screen">
+ <div class="overflow-scroll max-h-screen w-2/5">
+  <CodeMirror doc="hello" />
+ </div>
+</div>

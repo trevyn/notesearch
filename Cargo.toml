@@ -1,8 +1,8 @@
 [package]
 authors = ["trevyn <trevyn-git@protonmail.com>"]
-description = "Turbocharger full example template with Svelte, Tailwind, and Turbosql."
+description = "Notesearch."
 edition = "2018"
-name = "example-full"
+name = "notesearch"
 publish = false
 version = "0.1.0"
 
