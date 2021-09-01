@@ -12,13 +12,18 @@ pub struct Note {
 }
 
 #[backend]
-async fn insert_note(n: Note) -> Result<i64, turbosql::Error> {
+async fn note_insert(n: Note) -> Result<i64, turbosql::Error> {
  n.insert() // returns rowid
 }
 
 #[backend]
-async fn get_note(rowid: i64) -> Result<Note, turbosql::Error> {
+async fn note_get(rowid: i64) -> Result<Note, turbosql::Error> {
  select!(Note "WHERE rowid = ?", rowid)
+}
+
+#[backend]
+async fn note_update(rowid: i64, text: String) -> Result<usize, turbosql::Error> {
+ Note { rowid: Some(rowid), text: Some(text) }.update()
 }
 
 #[server_only]

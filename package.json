@@ -1,11 +1,11 @@
 {
  "scripts": {
-  "start": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --target wasm32-unknown-unknown && npx snowpack build && cargo run",
-  "watch": "cargo watch -s \"if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --target wasm32-unknown-unknown && npx snowpack build && cargo run\"",
+  "start": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --target wasm32-unknown-unknown && npx snowpack build && svelte-check && cargo run",
+  "watch": "cargo watch -s \"if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --target wasm32-unknown-unknown && npx snowpack build && svelte-check && cargo run\"",
   "hmr": "snowpack dev",
-  "build": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --release --target wasm32-unknown-unknown && npx snowpack build && cargo build --release",
+  "build": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --release --target wasm32-unknown-unknown && npx snowpack build && svelte-check && cargo build --release",
   "lint": "cargo clippy -- -Dwarnings && svelte-check",
-  "outdated-deps": "npm outdated && cargo update --dry-run",
+  "outdated-deps": "npm outdated; cargo update --dry-run",
   "update-deps": "npm update && cargo update",
   "reinstall-js-deps": "rm -rf node_modules && rm -rf package-lock.json && npm install"
  },
@@ -22,6 +22,6 @@
  "dependencies": {
   "@codemirror/basic-setup": "^0.19",
   "@codemirror/theme-one-dark": "^0.19",
-  "@codemirror/tooltip": "=0.19.0"
+  "@codemirror/tooltip": "^0.19.2"
  }
 }
