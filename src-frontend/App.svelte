@@ -10,11 +10,9 @@
  // })();
 </script>
 
-Hello!<br />
-
 {#await backend.note_get(1n) then note}
  <div class="bg-black text-gray-500 flex w-screen min-h-screen max-h-screen">
-  <div class="overflow-scroll max-h-screen w-2/5">
+  <div class="overflow-scroll max-h-screen w-full">
    <CodeMirror
     doc={note.text}
     on:docChanged={(e) => backend.note_update(1n, e.detail)}
