@@ -1,7 +1,7 @@
 {
  "scripts": {
-  "start": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --target wasm32-unknown-unknown && npx snowpack build && svelte-check && cargo run",
-  "watch": "cargo watch -s \"if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --target wasm32-unknown-unknown && npx snowpack build && svelte-check && cargo run\"",
+  "start": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --release --target wasm32-unknown-unknown && npx snowpack build && svelte-check && export RUST_LOG=debug && cargo run",
+  "watch": "cargo watch -s \"if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --release --target wasm32-unknown-unknown && npx snowpack build && svelte-check && cargo run\"",
   "hmr": "snowpack dev",
   "build": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --release --target wasm32-unknown-unknown && npx snowpack build && svelte-check && cargo build --release",
   "lint": "cargo clippy -- -Dwarnings && svelte-check",

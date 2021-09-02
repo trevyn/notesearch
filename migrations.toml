@@ -6,6 +6,10 @@
 migrations_append_only = [
   'CREATE TABLE note (rowid INTEGER PRIMARY KEY)',
   'ALTER TABLE note ADD COLUMN text TEXT',
+  'CREATE TABLE notelog (rowid INTEGER PRIMARY KEY)',
+  'ALTER TABLE notelog ADD COLUMN text TEXT',
+  'ALTER TABLE notelog ADD COLUMN timestamp REAL',
+  'ALTER TABLE notelog ADD COLUMN note_rowid INTEGER',
 ]
 output_generated_schema_for_your_information_do_not_edit = '''
   CREATE TABLE _turbosql_migrations (
@@ -15,6 +19,12 @@ output_generated_schema_for_your_information_do_not_edit = '''
   CREATE TABLE note (
     rowid INTEGER PRIMARY KEY,
     text TEXT
+  )
+  CREATE TABLE notelog (
+    rowid INTEGER PRIMARY KEY,
+    text TEXT,
+    timestamp REAL,
+    note_rowid INTEGER
   )
 '''
 [output_generated_tables_do_not_edit.note]
@@ -29,3 +39,26 @@ sql_type = 'INTEGER PRIMARY KEY'
 name = 'text'
 rust_type = 'Option < String >'
 sql_type = 'TEXT'
+
+[output_generated_tables_do_not_edit.notelog]
+name = 'notelog'
+
+[[output_generated_tables_do_not_edit.notelog.columns]]
+name = 'rowid'
+rust_type = 'Option < i64 >'
+sql_type = 'INTEGER PRIMARY KEY'
+
+[[output_generated_tables_do_not_edit.notelog.columns]]
+name = 'note_rowid'
+rust_type = 'Option < i64 >'
+sql_type = 'INTEGER'
+
+[[output_generated_tables_do_not_edit.notelog.columns]]
+name = 'text'
+rust_type = 'Option < String >'
+sql_type = 'TEXT'
+
+[[output_generated_tables_do_not_edit.notelog.columns]]
+name = 'timestamp'
+rust_type = 'Option < f64 >'
+sql_type = 'REAL'
