@@ -2,7 +2,7 @@
  "scripts": {
   "start-info": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --release --target wasm32-unknown-unknown && npx snowpack build && svelte-check && export RUST_LOG=info && cargo run",
   "start-debug": "if [ ! -d node_modules ]; then npm install; fi && cargo build --lib --release --target wasm32-unknown-unknown && npx snowpack build && svelte-check && export RUST_LOG=debug && cargo run",
-  "frontend-dev": "snowpack dev",
+  "frontend-dev": "cargo build --lib --target wasm32-unknown-unknown && snowpack dev",
   "build": "if [ ! -d node_modules ]; then npm install; fi && cargo clippy --lib --release --target wasm32-unknown-unknown -- -Dwarnings && cargo build --lib --release --target wasm32-unknown-unknown && npx snowpack build && svelte-check && cargo clippy --release -- -Dwarnings && cargo build --release",
   "outdated-rs-deps": "cargo update --dry-run",
   "update-rs-deps": "cargo update",

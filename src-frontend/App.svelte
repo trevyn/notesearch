@@ -1,6 +1,7 @@
 <script lang="ts">
  import * as backend from "./turbocharger_generated";
  import CodeMirror from "./CodeMirror.svelte";
+ import Audio from "./Audio.svelte";
 
  // (async () => {
  //  let note = Object.assign(new backend.Note(), { text: "Bob" });
@@ -9,6 +10,8 @@
  //  console.log("Inserted rowid ", rowid);
  // })();
 </script>
+
+<Audio />
 
 {#await backend.note_get(1n) then note}
  <div class="bg-black text-gray-500 flex w-screen min-h-screen max-h-screen">

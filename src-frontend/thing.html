@@ -1,0 +1,82 @@
+<canvas
+ id="myCanvas"
+ width="2048"
+ height="2048"
+ style="border: 1px solid #000000"
+></canvas>
+<input
+ type="range"
+ min="0"
+ max="20000"
+ value="100"
+ style="width: 1000px"
+ oninput="gain=this.value"
+/>
+
+<script>
+ var c = document.getElementById("myCanvas");
+ var ctx = c.getContext("2d");
+
+ c.style.width = "1024px";
+ c.style.height = "1024px";
+
+ let audioCtx = new AudioContext();
+
+ let x = 0;
+ let y = 40;
+ let gain = 100;
+ let audiodata = [];
+ let yoffset = 0;
+
+ function draw() {
+  let i = Math.floor(yoffset / 40) * 2048;
+  ctx.clearRect(0, 0, 2048, 2048);
+  ctx.beginPath();
+  for (let y = -yoffset % 40; y < 1950; y += 40) {
+   ctx.moveTo(0, y + audiodata[i] * gain);
+   for (let x = 0; x < 2048; x++) {
+    ctx.lineTo(x, y + audiodata[i] * gain);
+    i++;
+   }
+  }
+  ctx.stroke();
+  ctx.closePath();
+ }
+
+ let maxAmplitude = 0;
+
+ navigator.mediaDevices
+  .getUserMedia({ video: false, audio: true })
+  .then((stream) => {
+   let source = audioCtx.createMediaStreamSource(stream);
+   let scriptNode = audioCtx.createScriptProcessor(2048, 1, 1);
+
+   scriptNode.onaudioprocess = (audioProcessingEvent) => {
+    let inputBuffer = audioProcessingEvent.inputBuffer;
+    console.log(inputBuffer.sampleRate);
+    let inputData = inputBuffer.getChannelData(0);
+    // for (let datum of inputData) {
+    //  if (datum > maxAmplitude) {
+    //   maxAmplitude = datum;
+    //  }
+    //  if (-datum > maxAmplitude) {
+    //   maxAmplitude = -datum;
+    //  }
+    // }
+    // console.log(inputData.length);
+    i16array = Int16Array.from(inputData.map((x) => x * 32767));
+
+    audiodata.push(...inputData);
+
+    if (
+     (audiodata.length / 2048) * 40 >= yoffset + 2048 &&
+     (audiodata.length / 2048) * 40 < yoffset + 2088
+    )
+     yoffset += 1700;
+    draw();
+   };
+
+   source.connect(scriptNode);
+   scriptNode.connect(audioCtx.destination);
+  });
+</script>
