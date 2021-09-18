@@ -3,7 +3,7 @@ name: ci
 on:
   push:
   pull_request:
-  schedule: [cron: '40 2 * * *']
+  schedule: [cron: '40 8 * * *']
 
 env:
   CARGO_TERM_COLOR: always
@@ -14,12 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: lycheeverse/lychee-action@v1
+      - uses: trevyn/lychee-action@v1
         id: lychee
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: --verbose --no-progress --exclude-all-private --headers="accept=text/html"
+          args: ./**/*.* --verbose --no-progress --exclude-all-private --base="http://127.0.0.1" --headers="accept=text/html" --scheme=http --scheme=https --scheme=mailto
 
       - name: Fail if there were link-check errors
         run: exit ${{ steps.lychee.outputs.exit_code }}
@@ -32,7 +32,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-11.0]
-        rust: [stable, beta, nightly]
+        rust: [stable, beta, nightly-2021-09-16]
+        # nightly pinned due to https://github.com/rust-lang/cargo/issues/9919
 
     steps:
       - uses: actions/checkout@v2
@@ -45,8 +46,53 @@ jobs:
 
       - run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
-      - run: cargo install wasm-bindgen-cli --git https://github.com/rustwasm/wasm-bindgen
-
       - run: npm run build
       - run: npm audit
-      - run: npm run lint
+      - run: npm run test-ci
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}-${{ matrix.rust }}
+          path: target/release/${{ github.event.repository.name }}
+
+  release:
+    needs: [checklinks, build]
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v2
+
+      - id: vars
+        run: echo "::set-output name=sha::$(echo $(date '+%y%m%d-%H%M')-${GITHUB_SHA:0:7})"
+
+      - id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.vars.outputs.sha }}
+          release_name: ${{ steps.vars.outputs.sha }}
+          draft: false
+          prerelease: false
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./ubuntu-latest-stable/${{ github.event.repository.name }}
+          asset_name: ${{ github.event.repository.name }}-linux
+          asset_content_type: application/octet-stream
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./macos-11.0-stable/${{ github.event.repository.name }}
+          asset_name: ${{ github.event.repository.name }}-macos
+          asset_content_type: application/octet-stream

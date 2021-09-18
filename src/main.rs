@@ -47,16 +47,16 @@ async fn note_update(rowid: i64, text: String) -> Result<usize, turbosql::Error>
 #[server_only]
 #[tokio::main]
 async fn main() {
+ #[derive(rust_embed::RustEmbed)]
+ #[folder = "build"]
+ struct Frontend;
+
  pretty_env_logger::init_timed();
 
  log::warn!("warn enabled");
  log::info!("info enabled");
  log::debug!("debug enabled");
  log::trace!("trace enabled");
-
- #[derive(rust_embed::RustEmbed)]
- #[folder = "build"]
- struct Frontend;
 
  eprintln!("Serving on http://127.0.0.1:8080");
  opener::open("http://127.0.0.1:8080").ok();
