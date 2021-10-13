@@ -23,7 +23,8 @@
   "snowpack": "^3",
   "svelte": "^3",
   "svelte-check": "^2",
-  "tailwindcss": "^2"
+  "tailwindcss": "^2",
+  "audit-ci": "^5"
  },
  "dependencies": {
   "@codemirror/basic-setup": "^0.19",
